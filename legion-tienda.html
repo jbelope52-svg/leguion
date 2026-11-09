@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEGION — Tech &amp; Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#030405;
+    --panel:#0a0e11;
+    --panel-line:#1b2226;
+    --ink:#eef6f6;
+    --muted:#8a9797;
+    --cyan:#0FF0FC;
+    --orange:#FF7A1A;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+  .brand-font{
+    font-family:'Orbitron', sans-serif;
+    font-weight:800;
+    letter-spacing:0.06em;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:60;
+    background:rgba(3,4,5,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--panel-line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+    max-width:1180px; margin:0 auto;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .logo svg{ width:104px; height:104px; }
+  .logo-text{
+    font-size:56px; color:var(--ink);
+    text-shadow:0 0 10px rgba(15,240,252,0.55);
+  }
+  .logo-text span{ color:var(--cyan); }
+
+  .nav-mid{ display:flex; align-items:center; gap:4px; position:relative; }
+  .nav-btn{
+    background:none; border:none; cursor:pointer;
+    color:var(--ink); font-family:'Inter',sans-serif; font-size:14.5px; font-weight:500;
+    padding:10px 14px; display:flex; align-items:center; gap:6px;
+    border-radius:4px; transition:background .2s ease, color .2s ease;
+  }
+  .nav-btn:hover, .nav-btn.open{ background:rgba(15,240,252,0.08); color:var(--cyan); }
+  .nav-btn svg{ width:11px; height:11px; transition:transform .2s ease; }
+  .nav-btn.open svg{ transform:rotate(180deg); }
+  .nav-link{
+    color:var(--ink); text-decoration:none; font-size:14.5px; font-weight:500;
+    padding:10px 14px; display:none;
+  }
+  @media (min-width:640px){ .nav-link{ display:inline-block; } }
+
+  .dropdown{
+    position:absolute; top:calc(100% + 10px); left:0;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    min-width:250px;
+    padding:8px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
+    opacity:0; visibility:hidden; transform:translateY(-6px);
+    transition:opacity .18s ease, transform .18s ease, visibility .18s;
+  }
+  .dropdown.show{ opacity:1; visibility:visible; transform:translateY(0); }
+  .dropdown-item{
+    display:flex; align-items:center; gap:10px;
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    color:var(--muted); font-family:'Inter',sans-serif; font-size:14px;
+    padding:10px 12px; border-radius:4px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .dropdown-item:hover{ background:rgba(15,240,252,0.07); color:var(--ink); }
+  .dropdown-item.active{ color:var(--cyan); }
+  .dropdown-item .dot{
+    width:6px; height:6px; border-radius:50%; background:var(--cyan);
+    box-shadow:0 0 6px var(--cyan); flex:none;
+  }
+  .dropdown-divider{ height:1px; background:var(--panel-line); margin:6px 4px; }
+
+  .btn-wsp{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--cyan); color:#03181a;
+    text-decoration:none; padding:10px 18px; border-radius:4px;
+    font-size:14px; font-weight:700; white-space:nowrap;
+    transition:box-shadow .2s ease, transform .2s ease;
+  }
+  .btn-wsp:hover{ box-shadow:0 0 22px rgba(15,240,252,0.55); transform:translateY(-1px); }
+  .btn-wsp svg{ width:16px; height:16px; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:70px 24px 56px;
+    background:
+      radial-gradient(ellipse 60% 60% at 20% 20%, rgba(15,240,252,0.10), transparent 60%),
+      radial-gradient(ellipse 50% 50% at 85% 30%, rgba(255,122,26,0.08), transparent 60%);
+    border-bottom:1px solid var(--panel-line);
+  }
+  .hero-inner{ max-width:1180px; margin:0 auto; max-width:640px; }
+  .eyebrow{
+    color:var(--orange); font-size:13px; font-weight:700;
+    letter-spacing:0.12em;
+  }
+  .hero h1{
+    font-family:'Orbitron', sans-serif; font-weight:800;
+    font-size:clamp(30px,5vw,50px); line-height:1.08; letter-spacing:0.01em;
+    margin:14px 0 16px;
+  }
+  .hero h1 .glow{ color:var(--cyan); text-shadow:0 0 24px rgba(15,240,252,0.5); }
+  .hero p{ color:var(--muted); font-size:16.5px; line-height:1.6; max-width:50ch; margin:0 0 26px; }
+  .hero-ctas{ display:flex; flex-wrap:wrap; gap:14px; }
+  .btn-ghost{
+    border:1px solid var(--panel-line); color:var(--ink); text-decoration:none;
+    padding:12px 22px; border-radius:4px; font-size:14.5px; font-weight:600;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--cyan); color:var(--cyan); }
+
+  /* ---------- category strip ---------- */
+  .cat-strip{
+    display:flex; gap:10px; overflow-x:auto; padding:20px 24px;
+    border-bottom:1px solid var(--panel-line);
+    max-width:1180px; margin:0 auto; scrollbar-width:none;
+  }
+  .cat-strip::-webkit-scrollbar{ display:none; }
+  .cat-chip{
+    flex:none; background:var(--panel); border:1px solid var(--panel-line);
+    color:var(--muted); font-size:13.5px; font-weight:500;
+    padding:9px 16px; border-radius:999px; cursor:pointer; white-space:nowrap;
+    transition:border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .cat-chip:hover{ color:var(--ink); border-color:#2a3438; }
+  .cat-chip.active{ color:#03181a; background:var(--cyan); border-color:var(--cyan); font-weight:700; }
+
+  /* ---------- products ---------- */
+  .products{ padding:36px 24px 80px; max-width:1180px; margin:0 auto; }
+  .products h2{
+    font-family:'Orbitron', sans-serif; font-size:22px; font-weight:800;
+    margin:0 0 4px;
+  }
+  .products .sub{ color:var(--muted); font-size:14px; margin:0 0 28px; }
+
+  .grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:22px;
+  }
+  @media (max-width:900px){ .grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--panel); border:1px solid var(--panel-line); border-radius:6px;
+    overflow:hidden; transition:border-color .25s ease, transform .25s ease;
+  }
+  .card:hover{ border-color:rgba(15,240,252,0.4); transform:translateY(-3px); }
+  .card-photo{ position:relative; aspect-ratio:4/3; overflow:hidden; background:#05080a; }
+  .card-photo img{ width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+  .card:hover .card-photo img{ transform:scale(1.05); }
+  .cat-tag{
+    position:absolute; top:10px; left:10px;
+    background:rgba(3,4,5,0.75); border:1px solid rgba(15,240,252,0.4);
+    color:var(--cyan); font-size:11px; font-weight:600; letter-spacing:0.04em;
+    padding:4px 9px; border-radius:999px; backdrop-filter:blur(4px);
+  }
+  .card-body{ padding:16px; }
+  .card-body h3{ font-size:15.5px; font-weight:600; margin:0 0 6px; }
+  .card-body p{ font-size:13px; color:var(--muted); line-height:1.5; margin:0 0 14px; min-height:38px; }
+  .card-foot{ display:flex; align-items:center; justify-content:space-between; }
+  .price{ font-family:'Orbitron',sans-serif; font-weight:800; color:var(--orange); font-size:16px; }
+  .card-order{
+    display:inline-flex; align-items:center; gap:6px;
+    background:transparent; border:1px solid var(--cyan); color:var(--cyan);
+    text-decoration:none; font-size:12.5px; font-weight:700;
+    padding:8px 12px; border-radius:4px;
+    transition:background .2s ease, color .2s ease;
+  }
+  .card-order:hover{ background:var(--cyan); color:#03181a; }
+  .card-order svg{ width:13px; height:13px; }
+
+  .empty{ display:none; text-align:center; color:var(--muted); padding:40px 0; font-size:14px; }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--panel-line); padding:44px 24px 26px; }
+  .footer-inner{
+    max-width:1180px; margin:0 auto; display:grid;
+    grid-template-columns:1.3fr 1fr 1fr; gap:30px;
+  }
+  @media (max-width:700px){ .footer-inner{ grid-template-columns:1fr; } }
+  footer h4{ font-size:14px; font-weight:700; margin:0 0 10px; color:var(--ink); }
+  footer p, footer a{ font-size:13.5px; line-height:1.8; color:var(--muted); text-decoration:none; }
+  footer a:hover{ color:var(--cyan); }
+  .foot-bottom{
+    max-width:1180px; margin:34px auto 0; padding-top:18px;
+    border-top:1px solid var(--panel-line); font-size:12px; color:#5c6a6a;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .card, .card-photo img, .dropdown{ transition:none !important; }
+  }
+</style>
+<style>
+  /* ===== estilos agregados: carrito de compras (no se modificó nada anterior) ===== */
+  #cartBtn{
+    position:relative; background:none; border:1px solid var(--panel-line);
+    color:var(--ink); cursor:pointer; padding:10px 12px; border-radius:4px;
+    display:inline-flex; align-items:center; gap:0; margin-right:12px;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  #cartBtn:hover{ border-color:var(--cyan); color:var(--cyan); }
+  #cartBtn svg{ width:18px; height:18px; }
+  #cartCount{
+    position:absolute; top:-7px; right:-7px;
+    background:var(--orange); color:#1a0c02; font-size:10.5px; font-weight:800;
+    min-width:17px; height:17px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center; padding:0 3px;
+  }
+  .add-cart-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background:transparent; border:1px solid var(--panel-line); color:var(--ink);
+    font-size:12.5px; font-weight:700; padding:8px 10px; border-radius:4px;
+    cursor:pointer; margin-left:8px; transition:border-color .2s ease, color .2s ease;
+  }
+  .add-cart-btn:hover{ border-color:var(--cyan); color:var(--cyan); }
+  .add-cart-btn svg{ width:13px; height:13px; }
+  .card-foot{ flex-wrap:wrap; row-gap:8px; }
+
+  #cartOverlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.6);
+    opacity:0; visibility:hidden; transition:opacity .25s ease, visibility .25s;
+    z-index:90;
+  }
+  #cartOverlay.show{ opacity:1; visibility:visible; }
+  #cartDrawer{
+    position:fixed; top:0; right:0; height:100%; width:min(380px,92vw);
+    background:var(--panel); border-left:1px solid var(--panel-line);
+    z-index:95; transform:translateX(100%); transition:transform .3s ease;
+    display:flex; flex-direction:column;
+  }
+  #cartDrawer.show{ transform:translateX(0); }
+  #cartHeader{
+    padding:18px 20px; border-bottom:1px solid var(--panel-line);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  #cartHeader h3{ margin:0; font-family:'Orbitron',sans-serif; font-size:16px; }
+  #cartClose{ background:none; border:none; color:var(--muted); cursor:pointer; font-size:20px; line-height:1; }
+  #cartClose:hover{ color:var(--cyan); }
+  #cartItems{ flex:1; overflow-y:auto; padding:14px 20px; }
+  .cart-item{
+    display:flex; gap:10px; align-items:center; padding:12px 0;
+    border-bottom:1px solid var(--panel-line);
+  }
+  .cart-item-info{ flex:1; min-width:0; }
+  .cart-item-info strong{ display:block; font-size:13px; font-weight:600; margin-bottom:2px; }
+  .cart-item-info span{ font-size:12px; color:var(--muted); }
+  .cart-qty{ display:flex; align-items:center; gap:6px; }
+  .cart-qty button{
+    background:none; border:1px solid var(--panel-line); color:var(--ink);
+    width:22px; height:22px; border-radius:4px; cursor:pointer; font-size:13px; line-height:1;
+  }
+  .cart-qty button:hover{ border-color:var(--cyan); color:var(--cyan); }
+  .cart-remove{ background:none; border:none; color:#7c8a8a; cursor:pointer; font-size:16px; margin-left:4px; }
+  .cart-remove:hover{ color:var(--orange); }
+  #cartEmpty{ color:var(--muted); font-size:13.5px; text-align:center; padding:30px 0; }
+  #cartFooter{ padding:18px 20px; border-top:1px solid var(--panel-line); }
+  #cartTotalRow{ display:flex; justify-content:space-between; font-size:14.5px; margin-bottom:14px; }
+  #cartTotal{ font-family:'Orbitron',sans-serif; color:var(--orange); font-weight:800; font-size:18px; }
+  #cartCheckout{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--cyan); color:#03181a; border:none; text-decoration:none;
+    padding:13px; border-radius:4px; font-size:14.5px; font-weight:800; cursor:pointer;
+    transition:box-shadow .2s ease;
+  }
+  #cartCheckout:hover{ box-shadow:0 0 22px rgba(15,240,252,0.55); }
+
+  /* ===== estilos agregados: métodos de pago (no se modificó nada anterior) ===== */
+  #payMethodBtn{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:8px;
+    background:transparent; border:1px solid var(--panel-line); color:var(--ink);
+    padding:12px; border-radius:4px; font-size:14px; font-weight:700; cursor:pointer;
+    margin-top:10px; transition:border-color .2s ease, color .2s ease;
+  }
+  #payMethodBtn:hover{ border-color:var(--cyan); color:var(--cyan); }
+
+  #payOverlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.65);
+    opacity:0; visibility:hidden; transition:opacity .25s ease, visibility .25s;
+    z-index:120; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  #payOverlay.show{ opacity:1; visibility:visible; }
+  #payModal{
+    background:var(--panel); border:1px solid var(--panel-line); border-radius:8px;
+    width:100%; max-width:420px; padding:24px;
+    transform:translateY(12px); transition:transform .25s ease;
+  }
+  #payOverlay.show #payModal{ transform:translateY(0); }
+  #payModal h3{ font-family:'Orbitron',sans-serif; font-size:17px; margin:0 0 4px; }
+  #payModal .pay-sub{ color:var(--muted); font-size:13px; margin:0 0 18px; }
+  #payModal .pay-total{ color:var(--orange); font-weight:800; }
+  .pay-options{ display:flex; gap:10px; margin-bottom:18px; }
+  .pay-tab{
+    flex:1; background:transparent; border:1px solid var(--panel-line); color:var(--muted);
+    padding:10px; border-radius:4px; font-size:13px; font-weight:700; cursor:pointer;
+    transition:border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .pay-tab.active{ color:#03181a; background:var(--cyan); border-color:var(--cyan); }
+  .pay-panel{ display:none; }
+  .pay-panel.active{ display:block; }
+  .pay-btn-paypal{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; background:#FFC439; color:#0b1f4d; text-decoration:none;
+    padding:12px; border-radius:4px; font-size:14.5px; font-weight:800;
+  }
+  .bank-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 0; border-bottom:1px solid var(--panel-line); font-size:13.5px;
+  }
+  .bank-row span:first-child{ color:var(--muted); }
+  .bank-row span:last-child{ font-weight:700; text-align:right; }
+  #payPaidBtn{
+    width:100%; margin-top:16px; background:var(--cyan); color:#03181a; border:none;
+    text-decoration:none; display:flex; align-items:center; justify-content:center;
+    padding:12px; border-radius:4px; font-size:14px; font-weight:800; cursor:pointer;
+  }
+  #payClose{
+    background:none; border:none; color:var(--muted); cursor:pointer;
+    font-size:20px; float:right; line-height:1; margin-top:-6px;
+  }
+  #payClose:hover{ color:var(--cyan); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#" class="logo">
+      <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+        <rect x="55" y="55" width="130" height="130" fill="#0FF0FC" fill-opacity="0.05" stroke="#0FF0FC" stroke-width="4"/>
+        <line x1="85" y1="55" x2="85" y2="34" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="120" y1="55" x2="120" y2="34" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="155" y1="55" x2="155" y2="34" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="85" y1="185" x2="85" y2="206" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="120" y1="185" x2="120" y2="206" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="155" y1="185" x2="155" y2="206" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="55" y1="85" x2="34" y2="85" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="55" y1="120" x2="34" y2="120" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="55" y1="155" x2="34" y2="155" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="185" y1="85" x2="206" y2="85" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="185" y1="120" x2="206" y2="120" stroke="#0FF0FC" stroke-width="5"/>
+        <line x1="185" y1="155" x2="206" y2="155" stroke="#0FF0FC" stroke-width="5"/>
+        <rect x="82" y="82" width="76" height="76" fill="none" stroke="#0FF0FC" stroke-width="3"/>
+        <rect x="100" y="100" width="40" height="40" fill="none" stroke="#0FF0FC" stroke-width="2"/>
+        <circle cx="120" cy="120" r="6" fill="#FF7A1A"/>
+      </svg>
+      <span class="logo-text brand-font">LEG<span>I</span>ON</span>
+    </a>
+
+    <div class="nav-mid">
+      <button class="nav-btn" id="catBtn" aria-expanded="false">
+        Categorías
+        <svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l5 5 5-5"/></svg>
+      </button>
+      <div class="dropdown" id="catDropdown">
+        <button class="dropdown-item active" data-filter="todos"><span class="dot"></span>Todos los productos</button>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" data-filter="herramientas"><span class="dot"></span>Herramientas</button>
+        <button class="dropdown-item" data-filter="computacion"><span class="dot"></span>Computación</button>
+        <button class="dropdown-item" data-filter="energia"><span class="dot"></span>Energía</button>
+        <button class="dropdown-item" data-filter="gadgets"><span class="dot"></span>Gadgets</button>
+        <button class="dropdown-item" data-filter="iluminacion"><span class="dot"></span>Iluminación</button>
+        <button class="dropdown-item" data-filter="seguridad"><span class="dot"></span>Seguridad</button>
+        <button class="dropdown-item" data-filter="videovigilancia"><span class="dot"></span>Video Vigilancia</button>
+      </div>
+      <a href="#contacto" class="nav-link">Contacto</a>
+    </div>
+
+    <a class="btn-wsp" href="https://wa.me/50212345678?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm0 18a7.95 7.95 0 0 1-4.06-1.11l-.29-.17-3.01.79.8-2.93-.19-.3A7.96 7.96 0 1 1 12 20Zm4.4-5.96c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.18-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.19-.46-.39-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">TIENDA EN LÍNEA · GUATEMALA</span>
+    <h1>Tecnología con <span class="glow">energía</span> real.</h1>
+    <p>Herramientas, cómputo, gadgets y seguridad para tu casa o negocio. Elegí tu categoría y pedí directo por WhatsApp.</p>
+    <div class="hero-ctas">
+      <a href="#productos" class="btn-wsp" style="text-decoration:none;">Ver catálogo</a>
+      <a href="https://wa.me/50212345678" target="_blank" rel="noopener" class="btn-ghost">Escribir por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<div class="cat-strip" id="catStrip">
+  <button class="cat-chip active" data-filter="todos">Todos</button>
+  <button class="cat-chip" data-filter="herramientas">Herramientas</button>
+  <button class="cat-chip" data-filter="computacion">Computación</button>
+  <button class="cat-chip" data-filter="energia">Energía</button>
+  <button class="cat-chip" data-filter="gadgets">Gadgets</button>
+  <button class="cat-chip" data-filter="iluminacion">Iluminación</button>
+  <button class="cat-chip" data-filter="seguridad">Seguridad</button>
+  <button class="cat-chip" data-filter="videovigilancia">Video Vigilancia</button>
+</div>
+
+<section class="products" id="productos">
+  <h2>Catálogo</h2>
+  <p class="sub">Precios en quetzales. Escribinos por WhatsApp para apartar tu producto.</p>
+
+  <div class="grid" id="grid">
+
+    <article class="card" data-category="herramientas">
+      <div class="card-photo">
+        <span class="cat-tag">Herramientas</span>
+        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="Taladro inalámbrico" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>Taladro inalámbrico 20V</h3>
+        <p>Batería recargable, incluye set de brocas para madera y metal.</p>
+        <div class="card-foot">
+          <span class="price">Q650</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20el%20Taladro%20inal%C3%A1mbrico%2020V%20(Q650)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" data-category="herramientas">
+      <div class="card-photo">
+        <span class="cat-tag">Herramientas</span>
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;background:radial-gradient(circle at 50% 40%,#0c1a1f,#030405);" role="img" aria-label="Microscopio Estéreo Trinocular de 6X-45X, Mechanic MOS300 iMAT AIR">
+          <g fill="none" stroke="#0FF0FC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="110" y="238" width="180" height="20" rx="6" fill="#0FF0FC" fill-opacity="0.08"/>
+            <rect x="192" y="120" width="16" height="118" fill="#0FF0FC" fill-opacity="0.08"/>
+            <rect x="140" y="212" width="120" height="10" rx="3"/>
+            <rect x="176" y="190" width="48" height="8" rx="2" stroke="#FF7A1A"/>
+            <path d="M200 120 L200 96"/>
+            <rect x="170" y="56" width="60" height="42" rx="8" fill="#0FF0FC" fill-opacity="0.08"/>
+            <rect x="188" y="98" width="24" height="34" rx="4"/>
+            <path d="M178 58 L150 22 M222 58 L250 22"/>
+            <rect x="138" y="8" width="24" height="18" rx="4" transform="rotate(-38 150 17)"/>
+            <rect x="238" y="8" width="24" height="18" rx="4" transform="rotate(38 250 17)"/>
+            <path d="M200 56 L200 20"/>
+            <rect x="190" y="6" width="20" height="18" rx="4"/>
+            <circle cx="200" cy="77" r="6" stroke="#FF7A1A"/>
+            <path d="M210 150 L232 150 M210 165 L232 165" stroke-width="2"/>
+          </g>
+          <text x="200" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="#FF7A1A">6X – 45X · TRINOCULAR</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <h3>Microscopio Estéreo Trinocular 6X-45X Mechanic MOS300 iMAT AIR</h3>
+        <p>Para reparación de celular y PC de precisión. Solo 1 en existencia.</p>
+        <div class="card-foot">
+          <span class="price">Q3,850</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20el%20Microscopio%20Est%C3%A9reo%20Trinocular%206X-45X%20Mechanic%20MOS300%20iMAT%20AIR%20(Q3%2C850)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" data-category="computacion">
+      <div class="card-photo">
+        <span class="cat-tag">Computación</span>
+        <img src="https://images.unsplash.com/photo-1632893037520-7c223d9495f0?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="Laptop ultradelgada" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>Laptop ultradelgada i5</h3>
+        <p>16GB RAM, SSD 512GB, ideal para trabajo y estudio.</p>
+        <div class="card-foot">
+          <span class="price">Q5,200</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20la%20Laptop%20ultradelgada%20i5%20(Q5%2C200)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" data-category="energia">
+      <div class="card-photo">
+        <span class="cat-tag">Energía</span>
+        <img src="https://images.unsplash.com/photo-1566554738544-d962991c3fee?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="Power bank portátil" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>Power bank 20,000mAh</h3>
+        <p>Carga rápida, doble puerto USB, para celular y tablet.</p>
+        <div class="card-foot">
+          <span class="price">Q220</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20el%20Power%20bank%2020%2C000mAh%20(Q220)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" data-category="gadgets">
+      <div class="card-photo">
+        <span class="cat-tag">Gadgets</span>
+        <img src="https://images.unsplash.com/photo-1722153105551-cfea928e80de?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="Reloj inteligente" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>Smartwatch deportivo</h3>
+        <p>Monitor de ritmo cardíaco, notificaciones y GPS.</p>
+        <div class="card-foot">
+          <span class="price">Q480</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20el%20Smartwatch%20deportivo%20(Q480)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" data-category="iluminacion">
+      <div class="card-photo">
+        <span class="cat-tag">Iluminación</span>
+        <img src="https://images.unsplash.com/photo-1707733260992-73ff6dbed163?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="Foco inteligente controlado por celular" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>Foco inteligente WiFi</h3>
+        <p>Controlalo desde tu celular, millones de colores y horarios.</p>
+        <div class="card-foot">
+          <span class="price">Q135</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20el%20Foco%20inteligente%20WiFi%20(Q135)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" data-category="seguridad">
+      <div class="card-photo">
+        <span class="cat-tag">Seguridad</span>
+        <img src="https://images.unsplash.com/photo-1558002038-1055907df827?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="Cerradura inteligente controlada desde celular" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>Cerradura inteligente</h3>
+        <p>Abrí tu puerta desde el celular, huella o código.</p>
+        <div class="card-foot">
+          <span class="price">Q890</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20la%20Cerradura%20inteligente%20(Q890)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" data-category="videovigilancia">
+      <div class="card-photo">
+        <span class="cat-tag">Video Vigilancia</span>
+        <img src="https://images.unsplash.com/photo-1530151928300-3864d0e5d178?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="Cámara de seguridad tipo bala" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>Cámara IP exterior</h3>
+        <p>Visión nocturna, resistente al agua, ve todo desde tu app.</p>
+        <div class="card-foot">
+          <span class="price">Q390</span>
+          <a class="card-order" href="https://wa.me/50212345678?text=Hola%2C%20me%20interesa%20la%20C%C3%A1mara%20IP%20exterior%20(Q390)" target="_blank" rel="noopener">Pedir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="empty" id="emptyMsg">No hay productos en esta categoría todavía.</p>
+</section>
+
+<footer id="contacto">
+  <div class="footer-inner">
+    <div>
+      <div class="logo-text brand-font" style="font-size:20px;">LEG<span style="color:var(--cyan)">I</span>ON</div>
+      <p style="margin-top:10px;">Tienda de tecnología y electrónica en Guatemala.</p>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <p><a href="https://wa.me/50212345678" target="_blank" rel="noopener">WhatsApp: +502 1234-5678</a></p>
+      <p><a href="mailto:hola@legiontech.com">hola@legiontech.com</a></p>
+    </div>
+    <div>
+      <h4>Ubicación</h4>
+      <p>Ciudad de Guatemala, Guatemala</p>
+      <p>Envíos a todo el país</p>
+    </div>
+  </div>
+  <div class="foot-bottom wrap">© 2026 LEGION. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+  const catBtn = document.getElementById('catBtn');
+  const dropdown = document.getElementById('catDropdown');
+  const dropdownItems = dropdown.querySelectorAll('.dropdown-item');
+  const chipButtons = document.querySelectorAll('.cat-chip');
+  const cards = document.querySelectorAll('.card');
+  const emptyMsg = document.getElementById('emptyMsg');
+
+  catBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.toggle('show');
+    catBtn.classList.toggle('open', isOpen);
+    catBtn.setAttribute('aria-expanded', isOpen);
+  });
+  document.addEventListener('click', () => {
+    dropdown.classList.remove('show');
+    catBtn.classList.remove('open');
+    catBtn.setAttribute('aria-expanded', 'false');
+  });
+  dropdown.addEventListener('click', (e) => e.stopPropagation());
+
+  function applyFilter(filter){
+    let visible = 0;
+    cards.forEach(card => {
+      const match = filter === 'todos' || card.dataset.category === filter;
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    emptyMsg.style.display = visible === 0 ? 'block' : 'none';
+
+    dropdownItems.forEach(i => i.classList.toggle('active', i.dataset.filter === filter));
+    chipButtons.forEach(c => c.classList.toggle('active', c.dataset.filter === filter));
+  }
+
+  dropdownItems.forEach(item => {
+    item.addEventListener('click', () => {
+      applyFilter(item.dataset.filter);
+      dropdown.classList.remove('show');
+      catBtn.classList.remove('open');
+      document.getElementById('productos').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  chipButtons.forEach(chip => {
+    chip.addEventListener('click', () => {
+      applyFilter(chip.dataset.filter);
+    });
+  });
+</script>
+
+<!-- ===== bloque agregado: carrito de compras (no se modificó nada anterior) ===== -->
+<div id="cartOverlay"></div>
+<div id="cartDrawer">
+  <div id="cartHeader">
+    <h3 class="brand-font">CARRITO</h3>
+    <button id="cartClose" aria-label="Cerrar carrito">&times;</button>
+  </div>
+  <div id="cartItems">
+    <p id="cartEmpty">Tu carrito está vacío.</p>
+  </div>
+  <div id="cartFooter">
+    <div id="cartTotalRow">
+      <span>Total</span>
+      <span id="cartTotal">Q0</span>
+    </div>
+    <a id="cartCheckout" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm0 18a7.95 7.95 0 0 1-4.06-1.11l-.29-.17-3.01.79.8-2.93-.19-.3A7.96 7.96 0 1 1 12 20Z"/></svg>
+      Finalizar pedido por WhatsApp
+    </a>
+  </div>
+</div>
+
+<script>
+(function(){
+  const WHATSAPP_NUMBER = '50212345678';
+  let cart = [];
+  try{
+    const saved = localStorage.getItem('legion_cart');
+    if (saved) cart = JSON.parse(saved);
+  }catch(e){ cart = []; }
+
+  function saveCart(){
+    try{ localStorage.setItem('legion_cart', JSON.stringify(cart)); }catch(e){}
+  }
+
+  function money(n){
+    return 'Q' + n.toLocaleString('es-GT', {maximumFractionDigits:0});
+  }
+
+  // --- botón carrito en el header (se inserta junto al botón de WhatsApp, sin tocarlo) ---
+  const navEl = document.querySelector('.nav');
+  const wspBtn = document.querySelector('.btn-wsp');
+  const cartBtn = document.createElement('button');
+  cartBtn.id = 'cartBtn';
+  cartBtn.setAttribute('aria-label', 'Ver carrito');
+  cartBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.4 12.4a2 2 0 0 0 2 1.6h9.2a2 2 0 0 0 2-1.6L23 6H6"/></svg><span id="cartCount">0</span>';
+  navEl.insertBefore(cartBtn, wspBtn);
+
+  // --- botón "agregar al carrito" en cada producto (junto al botón de WhatsApp que ya existe) ---
+  document.querySelectorAll('.card').forEach(card => {
+    const foot = card.querySelector('.card-foot');
+    const orderLink = card.querySelector('.card-order');
+    if (!foot || !orderLink) return;
+
+    const name = card.querySelector('h3').textContent.trim();
+    const priceText = card.querySelector('.price').textContent.trim();
+    const priceNum = parseInt(priceText.replace(/[^0-9]/g, ''), 10) || 0;
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-cart-btn';
+    addBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.4 12.4a2 2 0 0 0 2 1.6h9.2a2 2 0 0 0 2-1.6L23 6H6"/></svg>Agregar';
+    addBtn.addEventListener('click', () => addToCart(name, priceNum));
+    foot.insertBefore(addBtn, orderLink.nextSibling);
+  });
+
+  function addToCart(name, price){
+    const existing = cart.find(i => i.name === name);
+    if (existing) existing.qty += 1;
+    else cart.push({name, price, qty:1});
+    saveCart();
+    renderCart();
+    openCart();
+  }
+
+  function changeQty(name, delta){
+    const item = cart.find(i => i.name === name);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.name !== name);
+    saveCart();
+    renderCart();
+  }
+
+  function removeItem(name){
+    cart = cart.filter(i => i.name !== name);
+    saveCart();
+    renderCart();
+  }
+
+  function renderCart(){
+    const itemsEl = document.getElementById('cartItems');
+    const countEl = document.getElementById('cartCount');
+    const totalEl = document.getElementById('cartTotal');
+    const checkoutEl = document.getElementById('cartCheckout');
+
+    const totalQty = cart.reduce((s,i)=>s+i.qty,0);
+    const totalPrice = cart.reduce((s,i)=>s+i.qty*i.price,0);
+
+    countEl.textContent = totalQty;
+    totalEl.textContent = money(totalPrice);
+
+    if (cart.length === 0){
+      itemsEl.innerHTML = '<p id="cartEmpty">Tu carrito está vacío.</p>';
+    } else {
+      itemsEl.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <strong>${item.name}</strong>
+            <span>${money(item.price)} c/u</span>
+          </div>
+          <div class="cart-qty">
+            <button data-action="dec" data-name="${item.name.replace(/"/g,'&quot;')}">−</button>
+            <span>${item.qty}</span>
+            <button data-action="inc" data-name="${item.name.replace(/"/g,'&quot;')}">+</button>
+          </div>
+          <button class="cart-remove" data-action="remove" data-name="${item.name.replace(/"/g,'&quot;')}">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    let msg = 'Hola, quiero hacer este pedido:%0A%0A';
+    cart.forEach(i => { msg += `• ${i.name} x${i.qty} - ${money(i.price*i.qty)}%0A`; });
+    msg += `%0ATotal: ${money(totalPrice)}`;
+    checkoutEl.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${cart.length ? msg : 'Hola%2C%20quiero%20hacer%20un%20pedido'}`;
+  }
+
+  document.getElementById('cartItems').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const name = btn.dataset.name;
+    if (btn.dataset.action === 'inc') changeQty(name, 1);
+    if (btn.dataset.action === 'dec') changeQty(name, -1);
+    if (btn.dataset.action === 'remove') removeItem(name);
+  });
+
+  function openCart(){
+    document.getElementById('cartOverlay').classList.add('show');
+    document.getElementById('cartDrawer').classList.add('show');
+  }
+  function closeCart(){
+    document.getElementById('cartOverlay').classList.remove('show');
+    document.getElementById('cartDrawer').classList.remove('show');
+  }
+  cartBtn.addEventListener('click', openCart);
+  document.getElementById('cartClose').addEventListener('click', closeCart);
+  document.getElementById('cartOverlay').addEventListener('click', closeCart);
+
+  renderCart();
+})();
+</script>
+
+<!-- ===== bloque agregado: métodos de pago (no se modificó nada anterior) ===== -->
+<div id="payOverlay">
+  <div id="payModal">
+    <button id="payClose" aria-label="Cerrar">&times;</button>
+    <h3 class="brand-font">MÉTODO DE PAGO</h3>
+    <p class="pay-sub">Total a pagar: <span class="pay-total" id="payTotalDisplay">Q0</span></p>
+
+    <div class="pay-options">
+      <button class="pay-tab active" data-pay="paypal">PayPal</button>
+      <button class="pay-tab" data-pay="bank">Cuenta bancaria</button>
+    </div>
+
+    <div class="pay-panel active" id="panel-paypal">
+      <p class="pay-sub" style="margin-bottom:14px;">Te vamos a redirigir a PayPal para completar el pago de forma segura.</p>
+      <a id="paypalLink" class="pay-btn-paypal" href="#" target="_blank" rel="noopener">Pagar con PayPal</a>
+    </div>
+
+    <div class="pay-panel" id="panel-bank">
+      <div class="bank-row"><span>Banco</span><span>Banco Industrial</span></div>
+      <div class="bank-row"><span>Tipo de cuenta</span><span>Monetaria</span></div>
+      <div class="bank-row"><span>No. de cuenta</span><span>0-000000-0</span></div>
+      <div class="bank-row"><span>A nombre de</span><span>LEGION GT</span></div>
+      <button id="payPaidBtn">Ya realicé el pago, avisar por WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const WHATSAPP_NUMBER = '50212345678';
+  const PAYPAL_USERNAME = 'TUUSUARIOPAYPAL';
+
+  const cartFooter = document.getElementById('cartFooter');
+  const checkoutLink = document.getElementById('cartCheckout');
+  const payBtn = document.createElement('button');
+  payBtn.id = 'payMethodBtn';
+  payBtn.textContent = 'Pagar con PayPal o transferencia';
+  cartFooter.insertBefore(payBtn, checkoutLink.nextSibling);
+
+  const payOverlay = document.getElementById('payOverlay');
+  const payTabs = document.querySelectorAll('.pay-tab');
+  const payPanels = document.querySelectorAll('.pay-panel');
+  const paypalLink = document.getElementById('paypalLink');
+  const payTotalDisplay = document.getElementById('payTotalDisplay');
+
+  function currentTotal(){
+    const el = document.getElementById('cartTotal');
+    return el ? el.textContent.trim() : 'Q0';
+  }
+  function totalAsNumber(){
+    return parseInt(currentTotal().replace(/[^0-9]/g,''), 10) || 0;
+  }
+
+  payBtn.addEventListener('click', () => {
+    payTotalDisplay.textContent = currentTotal();
+    paypalLink.href = `https://paypal.me/${PAYPAL_USERNAME}/${totalAsNumber()}`;
+    payOverlay.classList.add('show');
+  });
+
+  document.getElementById('payClose').addEventListener('click', () => payOverlay.classList.remove('show'));
+  payOverlay.addEventListener('click', (e) => { if (e.target === payOverlay) payOverlay.classList.remove('show'); });
+
+  payTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      payTabs.forEach(t => t.classList.remove('active'));
+      payPanels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.pay).classList.add('active');
+    });
+  });
+
+  document.getElementById('payPaidBtn').addEventListener('click', () => {
+    const msg = `Hola, ya realicé el pago por transferencia bancaria de ${currentTotal()}. Adjunto mi comprobante.`;
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  });
+})();
+</script>
+
+<!-- ===== bloque agregado: respaldo si una foto real no carga (no se modificó nada anterior) ===== -->
+<script>
+(function(){
+  const fallbackSVG = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'>
+    <rect width='400' height='300' fill='#05080a'/>
+    <g fill='none' stroke='#0FF0FC' stroke-width='3'>
+      <rect x='140' y='95' width='120' height='90' rx='6'/>
+      <circle cx='170' cy='123' r='10'/>
+      <path d='M140 165 L178 133 L212 158 L244 128 L260 148 L260 185 L140 185 Z'/>
+    </g>
+    <text x='200' y='228' text-anchor='middle' font-family='Arial,sans-serif' font-size='13' fill='#8a9797'>Foto no disponible</text>
+  </svg>`;
+  const fallbackSrc = 'data:image/svg+xml;utf8,' + encodeURIComponent(fallbackSVG);
+
+  document.querySelectorAll('.card-photo img').forEach(img => {
+    img.addEventListener('error', function(){
+      this.onerror = null;
+      this.src = fallbackSrc;
+    }, { once:true });
+    // si ya venía rota antes de que cargara este script, la revisamos igual
+    if (img.complete && img.naturalWidth === 0) {
+      img.src = fallbackSrc;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
